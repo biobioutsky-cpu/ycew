@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EWCCS // PROTOCOL LINK ACTIVE</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&display=swap');
+        body { font-family: 'Courier Prime', monospace; }
+        .neon-orange { text-shadow: 0 0 8px rgba(249, 115, 22, 0.85); }
+        .neon-green { text-shadow: 0 0 8px rgba(34, 197, 94, 0.85); }
+        .border-neon-orange { border-color: #f97316; box-shadow: 0 0 10px rgba(249, 115, 22, 0.45); }
+        .border-neon-green { border-color: #22c55e; box-shadow: 0 0 10px rgba(34, 197, 94, 0.45); }
+        .cell-box { transition: background-color 140ms ease, opacity 140ms ease, box-shadow 140ms ease; }
+    </style>
+</head>
+<body class="bg-black text-white min-h-screen w-full overflow-x-hidden p-3 sm:p-6 md:p-8 selection:bg-orange-900">
+
+    <!-- Header Banner & Membership / ID Block -->
+    <header class="mb-6 sm:mb-8 max-w-4xl">
+        <div class="border-2 border-orange-500 bg-orange-500/15 px-3 sm:px-5 py-3 border-neon-orange rounded space-y-2.5">
+            <div class="flex flex-wrap items-center justify-between gap-2">
+                <h1 class="text-sm sm:text-xl md:text-2xl font-bold tracking-wider sm:tracking-widest neon-orange">
+                    EWCCS // PROTOCOL LINK ACTIVE
+                </h1>
+                <span class="text-[11px] sm:text-xs font-bold px-2.5 py-1 border border-green-500 bg-green-500/20 text-green-300 neon-green rounded">
+                    $7.99 nail:pass* yencrypto access
+                </span>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-1.5 border-t border-orange-500/40 text-xs sm:text-sm">
+                <div class="flex items-center gap-2">
+                    <label for="username-input" class="text-orange-400 font-bold shrink-0">username:</label>
+                    <input
+                        id="username-input"
+                        type="text"
+                        placeholder="enter handle..."
+                        autocomplete="off"
+                        class="w-full min-w-0 bg-black/80 border border-orange-500/60 focus:border-green-400 outline-none px-2 py-1 text-green-300 text-xs sm:text-sm rounded"
+                    />
+                </div>
+                <div class="flex flex-col justify-center space-y-0.5 min-w-0">
+                    <div class="text-[11px] sm:text-xs text-orange-300 truncate">
+                        yencrypto&#8480; ID: <span id="yencrypto-id" class="font-bold text-green-400 neon-green">YC-UNASSIGNED</span>
+                    </div>
+                    <div class="text-[11px] sm:text-xs text-orange-300 truncate">
+                        AVAILABLE ON nail:pass*: <span class="font-bold text-green-400 neon-green">A$<span id="header-withdrawable-aud">11.74</span></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pt-1 border-t border-orange-500/30 text-[10px] sm:text-[11px] text-orange-400/90 tracking-wider">
+                * Virtual Funds via VidPay&#169;
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-4xl space-y-6">
+        <!-- Handshake Status Telemetry -->
+        <div class="text-orange-500 space-y-1.5">
+            <div class="flex flex-wrap items-center justify-between gap-2">
+                <span class="text-sm sm:text-base tracking-widest">. . . . . . .</span>
+                <button
+                    id="mode-toggle-btn"
+                    type="button"
+                    class="border border-green-500 bg-green-950/40 hover:bg-green-900/60 active:scale-95 text-green-400 text-xs px-3 py-1.5 rounded transition cursor-pointer"
+                >
+                    SEQ MODE: <span id="mode-label" class="font-bold">SCAN</span>
+                </button>
+            </div>
+            <div class="text-lg sm:text-2xl md:text-3xl font-bold leading-snug">
+                CONNECTING TO <span class="text-green-500 neon-green">ycew</span> DECK...
+            </div>
+            <div class="text-lg sm:text-2xl md:text-3xl font-bold leading-snug">
+                DATA HANDSHAKE STATUS: <span id="handshake-pct" class="text-green-500 neon-green">87%</span>
+            </div>
+        </div>
+
+        <!-- Synchronized Pattern Sequence Box Graphs -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
+            <!-- Orange 8x8 Matrix Panel -->
+            <div
+                id="orange-panel"
+                title="Tap to switch pattern mode"
+                class="w-full border-2 border-orange-500 p-3 sm:p-4 bg-orange-950/15 border-neon-orange rounded cursor-pointer select-none"
+            >
+                <div class="flex items-center justify-between text-[11px] text-orange-400 mb-2">
+                    <span>NODE_A // MATRIX 8x8</span>
+                    <span id="orange-seq-tag">[SCAN]</span>
+                </div>
+                <div id="orange-grid" class="space-y-1.5"></div>
+            </div>
+
+            <!-- Green 4x7 Matrix Panel -->
+            <div
+                id="green-panel"
+                title="Tap to switch pattern mode"
+                class="w-full border-2 border-green-500 p-3 sm:p-4 bg-green-950/15 border-neon-green rounded cursor-pointer select-none"
+            >
+                <div class="flex items-center justify-between text-[11px] text-green-400 mb-2">
+                    <span>YCEW_RELAY // MATRIX 4x7</span>
+                    <span id="green-seq-tag">[SYNC]</span>
+                </div>
+                <div id="green-grid" class="space-y-2"></div>
+            </div>
+        </div>
+
+        <!-- Packet Catchment (~ trace ycew) & A$ Exchange Module -->
+        <section class="border-2 border-green-500/80 bg-green-950/10 p-3 sm:p-5 rounded border-neon-green space-y-4">
+            <div class="flex flex-wrap items-center justify-between gap-2 border-b border-green-500/30 pb-2">
+                <div class="text-xs sm:text-sm font-bold text-green-400 neon-green tracking-wider">
+                    PACKET CATCHMENT // ~ trace ycew
+                </div>
+                <div class="flex items-center gap-2 text-[11px] sm:text-xs">
+                    <span id="yc-plus-badge" class="hidden px-2 py-0.5 rounded bg-orange-500/25 border border-orange-400 text-orange-300 font-bold">
+                        yc+ ACTIVE (<span id="yc-boost-pct">+0.0%</span>)
+                    </span>
+                    <span id="booster-status" class="text-green-400 font-bold">[CAPTURING]</span>
+                </div>
+            </div>
+
+            <!-- Balances & Conversion Metrics -->
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3 text-xs">
+                <div class="border border-orange-500/50 bg-black/70 p-2.5 rounded">
+                    <div class="text-orange-400 text-[10px]">YENCRYPTO (YC)</div>
+                    <div class="text-base sm:text-lg font-bold text-white mt-0.5"><span id="yc-balance">1240</span> YC</div>
+                </div>
+                <div class="border border-green-500/50 bg-black/70 p-2.5 rounded">
+                    <div class="text-green-400 text-[10px]">EST. VALUE (AUD)</div>
+                    <div class="text-base sm:text-lg font-bold text-green-400 neon-green mt-0.5">A$<span id="aud-balance">11.74</span></div>
+                </div>
+                <div class="border border-orange-500/50 bg-black/70 p-2.5 rounded">
+                    <div class="text-orange-400 text-[10px]">EXCHANGE RATE</div>
+                    <div class="text-xs sm:text-sm font-bold text-orange-300 mt-1">1 A$ = <span id="rate-yc-per-aud">105.61</span> YC</div>
+                </div>
+                <div class="border border-green-500/50 bg-black/70 p-2.5 rounded">
+                    <div class="text-green-400 text-[10px]">PACKETS TRACED</div>
+                    <div class="text-base sm:text-lg font-bold text-green-300 mt-0.5"><span id="packet-count">42</span></div>
+                </div>
+            </div>
+
+            <!-- Withdraw Threshold Progress Bar -->
+            <div class="space-y-1.5">
+                <div class="flex flex-wrap items-center justify-between gap-2 text-xs">
+                    <span class="text-orange-300">
+                        WITHDRAW PROGRESS: <span id="progress-pct" class="font-bold text-green-400">25%</span>
+                    </span>
+                    <label class="flex items-center gap-1.5 text-orange-300">
+                        <span>TARGET (YC):</span>
+                        <input
+                            id="threshold-input"
+                            type="number"
+                            min="500"
+                            step="500"
+                            value="5000"
+                            class="w-20 bg-black border border-orange-500/60 px-1.5 py-0.5 text-right text-green-300 text-xs rounded"
+                        />
+                    </label>
+                </div>
+                <div class="w-full h-3 bg-black border border-green-500/60 rounded overflow-hidden">
+                    <div id="progress-bar" class="h-full bg-green-500 transition-all duration-300" style="width: 25%;"></div>
+                </div>
+            </div>
+
+            <!-- Live ~ trace ycew Stream -->
+            <div class="bg-black/90 border border-green-500/40 p-2.5 rounded text-[11px] font-mono space-y-1">
+                <div class="text-green-500/80 border-b border-green-500/20 pb-1">root@termux:~# trace ycew --live</div>
+                <div id="trace-log" class="space-y-0.5 max-h-28 overflow-y-auto text-green-300"></div>
+            </div>
+
+            <!-- Action Controls -->
+            <div class="flex flex-col sm:flex-row gap-2.5">
+                <button
+                    id="trace-burst-btn"
+                    type="button"
+                    class="flex-1 border border-orange-500 bg-orange-500/20 hover:bg-orange-500/30 active:scale-[0.99] text-orange-300 font-bold text-xs sm:text-sm py-2.5 px-4 rounded transition cursor-pointer"
+                >
+                    + BURST TRACE (~ trace ycew)
+                </button>
+                <button
+                    id="exchange-btn"
+                    type="button"
+                    disabled
+                    class="flex-1 border border-green-500/40 bg-green-950/20 text-green-500/50 font-bold text-xs sm:text-sm py-2.5 px-4 rounded transition cursor-not-allowed"
+                >
+                    REACH 5,000 YC TO EXCHANGE A$
+                </button>
+            </div>
+
+            <!-- Two-Stage PayID Settlement & Verification Box -->
+            <div id="unlock-gate-box" class="hidden border-2 border-orange-500 bg-orange-950/25 p-3.5 rounded space-y-2.5">
+                <div class="flex flex-wrap items-center justify-between gap-2">
+                    <span class="text-xs sm:text-sm font-bold text-orange-400 neon-orange">[VidPay&#169; Funds]</span>
+                    <span id="settlement-tx-tag" class="text-xs font-bold text-green-400">TX-000000</span>
+                </div>
+                <div class="text-xs sm:text-sm text-white">
+                    ESCROWED BALANCE: <span class="font-bold text-green-400 neon-green">A$<span id="escrow-aud-label">0.00</span></span>
+                </div>
+                <div class="flex flex-wrap items-center justify-between gap-2 bg-black/80 border border-orange-500/60 p-2.5 rounded">
+                    <div class="text-xs">
+                        <span class="text-orange-400">PAYID (AUD $7.99):</span>
+                        <span id="payid-number" class="font-bold text-green-400 ml-1 select-all">0418813048</span>
+                    </div>
+                    <button
+                        id="copy-payid-btn"
+                        type="button"
+                        class="border border-green-500 bg-green-500/20 hover:bg-green-500/30 text-green-300 text-xs font-bold px-3 py-1 rounded cursor-pointer"
+                    >
+                        [COPY PAYID]
+                    </button>
+                </div>
+                <p class="text-[11px] leading-relaxed text-orange-200/95">
+                    DISCLAIMER: Virtual Funds via VidPay&#169;. Until the $7.99 AUD PayID payment to 0418813048 is processed with username, VidPay funds remain held and will not be released.
+                </p>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        (function () {
+            const MODES = ['SCAN', 'CASCADE', 'WAVE', 'PULSE'];
+            let modeIdx = 0;
+            let tick = 0;
+
+            const BASE_YC_PER_AUD = 105.61;
+            let currentYcPerAud = BASE_YC_PER_AUD;
+            let ycBalance = 1240;
+            let withdrawThreshold = 5000;
+            let packetCount = 42;
+            let ycPlusBoosts = 0;
+            let escrowedAud = 0;
+
+            // DOM Elements
+            const usernameInputEl = document.getElementById('username-input');
+            const yencryptoIdEl = document.getElementById('yencrypto-id');
+            const headerWithdrawableAudEl = document.getElementById('header-withdrawable-aud');
+            const modeToggleBtnEl = document.getElementById('mode-toggle-btn');
+            const modeLabelEl = document.getElementById('mode-label');
+            const handshakePctEl = document.getElementById('handshake-pct');
+            const orangePanelEl = document.getElementById('orange-panel');
+            const greenPanelEl = document.getElementById('green-panel');
+            const orangeGridEl = document.getElementById('orange-grid');
+            const greenGridEl = document.getElementById('green-grid');
+            const orangeSeqTagEl = document.getElementById('orange-seq-tag');
+            const greenSeqTagEl = document.getElementById('green-seq-tag');
+
+            const ycBalanceEl = document.getElementById('yc-balance');
+            const audBalanceEl = document.getElementById('aud-balance');
+            const rateYcPerAudEl = document.getElementById('rate-yc-per-aud');
+            const packetCountEl = document.getElementById('packet-count');
+            const progressPctEl = document.getElementById('progress-pct');
+            const progressBarEl = document.getElementById('progress-bar');
+            const thresholdInputEl = document.getElementById('threshold-input');
+            const traceLogEl = document.getElementById('trace-log');
+            const traceBurstBtnEl = document.getElementById('trace-burst-btn');
+            const exchangeBtnEl = document.getElementById('exchange-btn');
+            const ycPlusBadgeEl = document.getElementById('yc-plus-badge');
+            const ycBoostPctEl = document.getElementById('yc-boost-pct');
+            const boosterStatusEl = document.getElementById('booster-status');
+
+            const unlockGateBoxEl = document.getElementById('unlock-gate-box');
+            const settlementTxTagEl = document.getElementById('settlement-tx-tag');
+            const escrowAudLabelEl = document.getElementById('escrow-aud-label');
+            const copyPayidBtnEl = document.getElementById('copy-payid-btn');
+
+            // Generate deterministic yencrypto℠ ID on username input
+            function updateYencryptoId() {
+                const handle = usernameInputEl.value.trim();
+                if (!handle) {
+                    yencryptoIdEl.textContent = 'YC-UNASSIGNED';
+                    return;
+                }
+                let h1 = 0x811c9dc5;
+                let h2 = 0x1b873593;
+                for (let i = 0; i < handle.length; i++) {
+                    const ch = handle.charCodeAt(i);
+                    h1 ^= ch;
+                    h1 = Math.imul(h1, 0x01000193);
+                    h2 ^= ch + i;
+                    h2 = Math.imul(h2, 0x85ebca6b);
+                }
+                const p1 = (h1 >>> 0).toString(16).toUpperCase().padStart(8, '0').slice(0, 4);
+                const p2 = (h1 >>> 0).toString(16).toUpperCase().padStart(8, '0').slice(4, 8);
+                const p3 = (h2 >>> 0).toString(16).toUpperCase().padStart(8, '0').slice(0, 4);
+                yencryptoIdEl.textContent = `YC-${p1}-${p2}-${p3}`;
+            }
+
+            usernameInputEl.addEventListener('input', updateYencryptoId);
+
+            // Build 8x8 Orange Matrix Cells
+            const orangeCells = [];
+            for (let r = 0; r < 8; r++) {
+                const rowEl = document.createElement('div');
+                rowEl.className = 'grid grid-cols-8 gap-1.5';
+                const rowArr = [];
+                for (let c = 0; c < 8; c++) {
+                    const cell = document.createElement('div');
+                    cell.className = 'cell-box h-5 sm:h-6 rounded-sm bg-orange-950/40 border border-orange-500/30';
+                    rowEl.appendChild(cell);
+                    rowArr.push(cell);
+                }
+                orangeGridEl.appendChild(rowEl);
+                orangeCells.push(rowArr);
+            }
+
+            // Build 4x7 Green Matrix Cells (12-col mobile-safe layout)
+            const greenCells = [];
+            for (let r = 0; r < 4; r++) {
+                const rowEl = document.createElement('div');
+                rowEl.className = 'grid grid-cols-12 gap-1.5 items-center';
+                const rowArr = [];
+
+                for (let c = 0; c < 3; c++) {
+                    const cell = document.createElement('div');
+                    cell.className = 'cell-box h-6 sm:h-7 rounded-sm bg-green-950/40 border border-green-500/30';
+                    rowEl.appendChild(cell);
+                    rowArr.push(cell);
+                }
+
+                const spacer = document.createElement('div');
+                spacer.className = 'col-span-2';
+                rowEl.appendChild(spacer);
+
+                for (let c = 3; c < 7; c++) {
+                    const cell = document.createElement('div');
+                    cell.className = 'cell-box h-6 sm:h-7 rounded-sm bg-green-950/40 border border-green-500/30';
+                    rowEl.appendChild(cell);
+                    rowArr.push(cell);
+                }
+
+                const dots = document.createElement('div');
+                dots.className = 'col-span-3 text-right text-[10px] sm:text-xs text-green-500/80 tracking-widest truncate';
+                dots.textContent = '. . .';
+                rowEl.appendChild(dots);
+
+                greenGridEl.appendChild(rowEl);
+                greenCells.push(rowArr);
+            }
+
+            function cycleMode() {
+                modeIdx = (modeIdx + 1) % MODES.length;
+                const mode = MODES[modeIdx];
+                modeLabelEl.textContent = mode;
+                orangeSeqTagEl.textContent = `[${mode}]`;
+                greenSeqTagEl.textContent = `[${mode}]`;
+                renderFrame();
+            }
+
+            modeToggleBtnEl.addEventListener('click', cycleMode);
+            orangePanelEl.addEventListener('click', cycleMode);
+            greenPanelEl.addEventListener('click', cycleMode);
+            document.addEventListener('keydown', (e) => {
+                if (e.code === 'Space' && document.activeElement.tagName !== 'INPUT') {
+                    e.preventDefault();
+                    cycleMode();
+                }
+            });
+
+            function isCellActive(r, c, rows, cols, mode, step) {
+                if (mode === 'SCAN') {
+                    return (r + step) % rows === 0 || (c + step) % cols === 0;
+                }
+                if (mode === 'CASCADE') {
+                    return ((r + c + step) % 4) < 2;
+                }
+                if (mode === 'WAVE') {
+                    const waveRow = Math.floor(((Math.sin((c + step) * 0.7) + 1) / 2) * rows);
+                    return r === waveRow || r === (waveRow + 1) % rows;
+                }
+                // PULSE
+                const centerR = (rows - 1) / 2;
+                const centerC = (cols - 1) / 2;
+                const dist = Math.round(Math.abs(r - centerR) + Math.abs(c - centerC));
+                return (dist + step) % 3 === 0;
+            }
+
+            function renderFrame() {
+                const mode = MODES[modeIdx];
+
+                for (let r = 0; r < 8; r++) {
+                    for (let c = 0; c < 8; c++) {
+                        const active = isCellActive(r, c, 8, 8, mode, tick);
+                        orangeCells[r][c].className = active
+                            ? 'cell-box h-5 sm:h-6 rounded-sm bg-orange-500 shadow-[0_0_8px_#f97316]'
+                            : 'cell-box h-5 sm:h-6 rounded-sm bg-orange-950/35 border border-orange-500/25';
+                    }
+                }
+
+                for (let r = 0; r < 4; r++) {
+                    for (let c = 0; c < 7; c++) {
+                        const active = isCellActive(r, c, 4, 7, mode, tick);
+                        greenCells[r][c].className = active
+                            ? 'cell-box h-6 sm:h-7 rounded-sm bg-green-500 shadow-[0_0_8px_#22c55e]'
+                            : 'cell-box h-6 sm:h-7 rounded-sm bg-green-950/35 border border-green-500/25';
+                    }
+                }
+
+                const pct = 84 + ((tick % 13));
+                handshakePctEl.textContent = `${pct}%`;
+            }
+
+            function appendTraceLine(tag, bytes, minted, msg) {
+                const line = document.createElement('div');
+                const ts = new Date().toTimeString().slice(0, 8);
+                line.className = 'truncate';
+                line.textContent = `[${ts}] ${tag} ${bytes}B | +${minted} YC | ${msg}`;
+                traceLogEl.appendChild(line);
+                while (traceLogEl.children.length > 6) {
+                    traceLogEl.removeChild(traceLogEl.firstChild);
+                }
+                traceLogEl.scrollTop = traceLogEl.scrollHeight;
+            }
+
+            function updateCatchmentUI() {
+                const audLive = ycBalance / currentYcPerAud;
+                const totalWithdrawableAud = audLive + escrowedAud;
+                const pct = Math.min(100, Math.floor((ycBalance / withdrawThreshold) * 100));
+
+                ycBalanceEl.textContent = ycBalance.toLocaleString();
+                audBalanceEl.textContent = audLive.toFixed(2);
+                headerWithdrawableAudEl.textContent = totalWithdrawableAud.toFixed(2);
+                rateYcPerAudEl.textContent = currentYcPerAud.toFixed(2);
+                packetCountEl.textContent = packetCount.toLocaleString();
+
+                progressPctEl.textContent = `${pct}%`;
+                progressBarEl.style.width = `${pct}%`;
+
+                if (ycBalance >= withdrawThreshold) {
+                    const boostGain = (((BASE_YC_PER_AUD - currentYcPerAud) / BASE_YC_PER_AUD) * 100).toFixed(1);
+                    ycPlusBadgeEl.classList.remove('hidden');
+                    ycBoostPctEl.textContent = `+${boostGain}%`;
+                    boosterStatusEl.textContent = '[yc+ BOOSTING]';
+                    boosterStatusEl.className = 'text-orange-400 font-bold neon-orange';
+
+                    exchangeBtnEl.disabled = false;
+                    exchangeBtnEl.className =
+                        'flex-1 border-2 border-green-400 bg-green-500/25 hover:bg-green-500/40 active:scale-[0.99] text-green-300 font-bold text-xs sm:text-sm py-2.5 px-4 rounded transition cursor-pointer shadow-[0_0_12px_rgba(34,197,94,0.4)]';
+                    exchangeBtnEl.textContent = `EXCHANGE ${ycBalance.toLocaleString()} YC FOR A$${audLive.toFixed(2)}`;
+                } else {
+                    ycPlusBadgeEl.classList.add('hidden');
+                    boosterStatusEl.textContent = '[CAPTURING]';
+                    boosterStatusEl.className = 'text-green-400 font-bold';
+
+                    exchangeBtnEl.disabled = true;
+                    exchangeBtnEl.className =
+                        'flex-1 border border-green-500/40 bg-green-950/20 text-green-500/50 font-bold text-xs sm:text-sm py-2.5 px-4 rounded transition cursor-not-allowed';
+                    exchangeBtnEl.textContent = `REACH ${withdrawThreshold.toLocaleString()} YC TO EXCHANGE A$`;
+                }
+            }
+
+            thresholdInputEl.addEventListener('change', () => {
+                const val = parseInt(thresholdInputEl.value, 10);
+                withdrawThreshold = Number.isFinite(val) && val >= 500 ? val : 5000;
+                thresholdInputEl.value = withdrawThreshold;
+                updateCatchmentUI();
+            });
+
+            traceBurstBtnEl.addEventListener('click', () => {
+                const burstPackets = 5;
+                let burstYc = 0;
+                for (let i = 0; i < burstPackets; i++) {
+                    burstYc += 65 + Math.floor(Math.random() * 55);
+                }
+                ycBalance += burstYc;
+                packetCount += burstPackets;
+                appendTraceLine('BURST', 1024, burstYc, 'ycew.burst CAPTURED');
+                updateCatchmentUI();
+            });
+
+            exchangeBtnEl.addEventListener('click', () => {
+                if (ycBalance < withdrawThreshold) return;
+                const settledAud = +(ycBalance / currentYcPerAud).toFixed(2);
+                escrowedAud = +(escrowedAud + settledAud).toFixed(2);
+                ycBalance = 0;
+                currentYcPerAud = BASE_YC_PER_AUD;
+                ycPlusBoosts = 0;
+
+                const txCode = 'TX-' + Math.random().toString(36).substring(2, 8).toUpperCase();
+                settlementTxTagEl.textContent = txCode;
+                escrowAudLabelEl.textContent = escrowedAud.toFixed(2);
+                unlockGateBoxEl.classList.remove('hidden');
+
+                appendTraceLine('SETTLE', 512, 0, `[VidPay© Funds] A$${settledAud.toFixed(2)} HELD (${txCode})`);
+                updateCatchmentUI();
+            });
+
+            copyPayidBtnEl.addEventListener('click', () => {
+                const tempInput = document.createElement('input');
+                tempInput.value = '0418813048';
+                document.body.appendChild(tempInput);
+                tempInput.select();
+                try {
+                    document.execCommand('copy');
+                    copyPayidBtnEl.textContent = '[COPIED: 0418813048]';
+                    setTimeout(() => {
+                        copyPayidBtnEl.textContent = '[COPY PAYID]';
+                    }, 2000);
+                } catch (err) {
+                    copyPayidBtnEl.textContent = '[0418813048]';
+                }
+                document.body.removeChild(tempInput);
+            });
+
+            // Initialize initial UI & trace lines
+            appendTraceLine('INIT', 128, 0, '~ trace ycew ONLINE');
+            appendTraceLine('SYNC', 256, 20, 'ycew.mesh HANDSHAKE OK');
+            updateCatchmentUI();
+            renderFrame();
+
+            setInterval(() => {
+                tick++;
+                renderFrame();
+
+                // Simulate passive ~ trace ycew packet catchment
+                if (tick % 2 === 0) {
+                    const bytes = 64 + Math.floor(Math.random() * 192);
+                    const minted = 15 + Math.floor(Math.random() * 35);
+                    ycBalance += minted;
+                    packetCount += 1;
+                    appendTraceLine('PKT', bytes, minted, 'ycew.relay');
+
+                    // Apply yc+ rate booster slowly once threshold reaches 100%
+                    if (ycBalance >= withdrawThreshold && tick % 4 === 0) {
+                        ycPlusBoosts += 1;
+                        currentYcPerAud = Math.max(25.0, +(currentYcPerAud - 0.18).toFixed(2));
+                    }
+
+                    updateCatchmentUI();
+                }
+            }, 650);
+        })();
+    </script>
+</body>
+</html>
